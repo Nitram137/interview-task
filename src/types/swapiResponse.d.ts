@@ -1,6 +1,6 @@
-type SwapiPeopleResponse = {
+type SwapiResponse = {
   count: number;
   next: string | null;
   previous: string | null;
-  results: Character[];
+  results: Character[] | Film[];
 };

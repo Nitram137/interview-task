@@ -1,26 +1,35 @@
+"use client";
+
+import { IMAGE_URL } from "@/utils/constants";
 import Image from "next/image";
 
-const imageSourceUrl =
-  "https://vieraboschkova.github.io/swapi-gallery/static/assets/img/people/";
-
-const Card = ({ character }: { character: Character }) => {
+const Card = ({
+  character,
+  openModal,
+}: {
+  character: Character;
+  openModal: (character: Character) => void;
+}) => {
   const getImageUrl = () => {
     const match = character.url.match(/\d+/);
     const id = match ? match[0] : "0";
-    return imageSourceUrl + `${id}.jpg`;
+    return IMAGE_URL + `${id}.jpg`;
   };
 
   const imageUrl = getImageUrl();
 
   return (
-    <div className="card bg-base-100 shadow-lg hover:z-10 hover:scale-105 hover:shadow-white">
+    <div
+      className="card bg-base-100 shadow-lg hover:z-10 hover:scale-105 hover:shadow-white hover:cursor-pointer"
+      onClick={() => openModal(character)}
+    >
       <figure className="mt-4">
         <Image
           className="rounded-xl"
           src={imageUrl}
           alt={character.name}
-          width={160}
           height={160}
+          width={160}
         />
       </figure>
       <div className="card-body items-center text-center">

@@ -1,22 +1,9 @@
 import { Suspense } from "react";
-import Card from "./components/card";
 import Loading from "./loading";
-import Pagination from "./components/pagination";
-import Search from "./components/search";
-
-const baseUrl = "https://swapi.dev/api/people/";
-
-const fetchFilteredData = async (search = "", currentPage = "1") => {
-  const res = await fetch(baseUrl + `?search=${search}&page=${currentPage}`);
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  const swapiPeopleResponse: SwapiPeopleResponse = await res.json();
-
-  return swapiPeopleResponse;
-};
+import Pagination from "../components/pagination";
+import Search from "../components/search";
+import CardList from "@/components/cardList";
+import { fetchAllFilms, fetchFilteredPeople } from "@/utils/data";
 
 const Home = async ({
   searchParams,
@@ -29,7 +16,8 @@ const Home = async ({
   const search = searchParams?.search || "";
   const currentPage = searchParams?.page || "1";
 
-  const data = await fetchFilteredData(search, currentPage);
+  const peopleData = await fetchFilteredPeople(search, currentPage);
+  const films = (await fetchAllFilms()) as Film[];
 
   return (
     <main className="flex items-center justify-around w-full flex-col min-h-screen">
@@ -38,13 +26,12 @@ const Home = async ({
         <Search />
       </div>
       <Suspense key={search + currentPage} fallback={<Loading />}>
-        <div className="grid grid-cols-5 gap-6 w-2/3 my-4">
-          {data.results?.map((character, index) => (
-            <Card character={character} key={index} />
-          ))}
-        </div>
+        <CardList peopleData={peopleData} films={films} />
         <div className="flex w-full justify-center mb-4">
-          <Pagination hasPrevious={!!data.previous} hasNext={!!data.next} />
+          <Pagination
+            hasPrevious={!!peopleData.previous}
+            hasNext={!!peopleData.next}
+          />
         </div>
       </Suspense>
     </main>
