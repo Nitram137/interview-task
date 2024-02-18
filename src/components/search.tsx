@@ -17,9 +17,10 @@ const Search = () => {
       params.delete("search");
     }
     replace(`${pathname}?${params.toString()}`);
-  }, 300);
+  }, 500);
+
   return (
-    <div>
+    <div className="mr-4">
       <label className="input input-bordered flex items-center gap-2">
         <input
           type="text"
